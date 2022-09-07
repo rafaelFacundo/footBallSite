@@ -22,35 +22,41 @@ const showElementAnimation = keyframes`
     }
     100% {
         height: 230px;
-        display: auto;
+        & * {
+            display: auto;
+        }
+        
     }
 `
 
 const closeAnimation = keyframes`
     0% {
         height: 230px;
-        display: auto;
+        & div {
+            display: none;
+        }
     }
     25% {
         height: 171px;
-        display: auto;
+        
     }
     50% {
         height: 114px;
-        display: auto;
+        
     }
     75% {
         height: 57px;
-        display: auto;
+        
     }
     100% {
         height: 0;
-        display: auto;
+        
     }
 `
 
 const PlayerStatisticByLeague = styled.div`
     width: 100%;
+    background-color: white;
     &:first-child {
         cursor: pointer;
     }
@@ -60,7 +66,7 @@ const InformationsDiv = styled.div`
     height: 0;  
     display: auto;
 
-    animation: ${props => props.animation ? showElementAnimation : closeAnimation} 1s ease-out forwards;
+    animation: ${props => props.animation} 0.5s ease-out forwards;
     & p {
         margin: 3px;
     }
@@ -87,21 +93,35 @@ const InformationsContent = styled.div`
 `
 
 export default function PlayerStactisByLeague() {
-    const [showAnimation, setShowAnimation] = useState(false);
-    const [showDisplay, setShowDisplay] = useState(true);
+    const [showAnimation, setShowAnimation] = useState(closeAnimation);
+    const [showDisplay, setShowDisplay] = useState(false);
 
+    function setTheDisplayStatus(animationStatus, element) {
+        if (animationStatus === "start") {
+            console.log(element.__reactProps$6hjxrod8gbe.onAnimationEnd)
+        }else {
+            setShowDisplay(true);
+        }
+     }
 
+     function changeAnimation (currentAnimation) {
+        if (currentAnimation === closeAnimation) {
+            setShowAnimation(showElementAnimation);
+        }else {
+            setShowAnimation(closeAnimation)
+        }
+     }
 
     return(
         <PlayerStatisticByLeague>
-            <LeagueNameDiv onClick={()=>{setShowAnimation(!showAnimation)}}>
+            <LeagueNameDiv onClick={()=>{changeAnimation(showAnimation)}}>
                 <img src={premierLeague} alt="Logo da liga que o jogador joga" /> 
                 <p>Premier league</p>
             </LeagueNameDiv>
             <InformationsDiv
                 animation={showAnimation}
-                onAnimationStart={()=>{setShowDisplay(!showDisplay)}}
-                onAnimationEnd={()=>{setShowDisplay(!showDisplay)}}
+                onAnimationStart={()=>{if(showAnimation === closeAnimation){setShowDisplay(false)}else{setShowDisplay(true)}}}
+                onAnimationEnd={()=>{if(showAnimation === showElementAnimation){setShowDisplay(true)}else{setShowDisplay(false)}}}
             >
                 <InformationsContent setDis={showDisplay}>
                     <p>Minutes played: 147 min</p>

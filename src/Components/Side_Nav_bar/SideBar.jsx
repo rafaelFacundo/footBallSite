@@ -12,15 +12,22 @@ const InAnimation = keyframes`
 `
 
 const MainContent = styled.div`
-    width: 17vw;
+    width: 270px;
     height: 100%;
     background-color: #2144F9;
     position: absolute;
+    top: 153px;
     display: flow-root;
     overflow-y: scroll;
     padding: 0;
     //animation: name duration timing-function delay iteration-count direction fill-mode;
-    animation: ${InAnimation} 0.5s linear normal forwards ;
+    animation: ${InAnimation} 0.5s linear normal forwards;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    
 `
 
 export default function SideBar ( {leagues} ) {

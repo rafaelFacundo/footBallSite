@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import LeagueStanding from "./components/LeagueStanding";
-import NavBar from "../../Components/NavBar";
+import NavBar from "../../Components/Side_Nav_bar/Index";
 import premierLeague from "../../Assets/premier_league_icon.png";
 import england from "../../Assets/England_flag.png";
 

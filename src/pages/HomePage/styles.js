@@ -3,33 +3,29 @@ import styled from "styled-components";
 const MainContent = styled.div`
     width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    
+    
+    
 `
-
-const MenurIcon = styled.img`
-    margin: 1em;
-    width: 2em;
-    height: 2em;
-    position: absolute;
-    top: 0.6em;
-    left: 0.6em;
-
-    &:hover{
-        cursor: pointer;
-    }
-`
-
 const MainContentDiv = styled.div`
     display: flex;
     //align-items: center;
     //justify-content: center;
+    height: 100%;
     flex: 1;
     width: 100%;
 `
 
-const LiveGamesDiv = styled.div``
+const LiveGamesDiv = styled.div`
+    display: flow-root;
+    overflow-y: scroll;
+    height: 100%;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+`
 
 const LeagueTopScoresDiv = styled.div`
     display: grid;
@@ -42,7 +38,6 @@ const LeagueTopScoresDiv = styled.div`
 
 export {
     MainContent,
-    MenurIcon,
     MainContentDiv,
     LiveGamesDiv,
     LeagueTopScoresDiv, 

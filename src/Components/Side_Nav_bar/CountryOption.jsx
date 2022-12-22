@@ -1,19 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import BrazilFlag from "../Assets/Brazil_flag.png"
+
 
 
 const MainContent = styled.div`
     width: 90%;
-    height: 10%;
+    height: 50px;
     background-color: #2144F9;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
+    
     margin-bottom: 1em;
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 0.3em;
 
     &:hover {

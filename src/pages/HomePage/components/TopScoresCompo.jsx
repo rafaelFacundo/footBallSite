@@ -67,7 +67,6 @@ export default function TopScoresCompo() {
                     </TopSocorerTableRow>
                 </TopScorersTableHea>
                 <TopScorersTableTbod>
-
                     <TopSocorerTableRow>
                         <TopScorersTableTd>1° - </TopScorersTableTd>
                         <TopScorersTableTd>
@@ -75,15 +74,9 @@ export default function TopScoresCompo() {
                                 <PlayerImg src={jorginho} />
                                 Jorginho
                             </PlayerDiv>
-                            
                         </TopScorersTableTd>
                         <TopScorersTableTd>50</TopScorersTableTd>
                     </TopSocorerTableRow>
-
-                
-
-
-                    
                 </TopScorersTableTbod>
             </TopScorersTable>
         </MainContent>

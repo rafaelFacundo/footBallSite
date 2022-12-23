@@ -1,18 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import LeagueInfo from "./components/leagueInfo/Index";
 import LeagueLiveGames from "./components/LeagueLiveGames";
 import NavBar from "../../Components/Side_Nav_bar/Index";
-
-import TopScoresCompo from "./components/TopScoresCompo";
-import PlayerInfo from "./components/PlayerInfoCompo/PlayerInfo";
 import {
-    LeagueTopScoresDiv,
     LiveGamesDiv,
     MainContent,
-    MainContentDiv,
-    MenurIcon 
+    MainContentDiv 
 } from "./styles";
 
 export default function HomePage () {
@@ -78,11 +73,7 @@ export default function HomePage () {
                         })
                     }
                 </LiveGamesDiv>
-                <LeagueTopScoresDiv>
-                    <TopScoresCompo/>
-                    <PlayerInfo/>
-                </LeagueTopScoresDiv>
-
+                <LeagueInfo/>
             </MainContentDiv>
         </MainContent>
     );

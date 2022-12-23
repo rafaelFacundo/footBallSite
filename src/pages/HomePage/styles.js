@@ -28,7 +28,7 @@ const LiveGamesDiv = styled.div`
 `
 
 const LeagueTopScoresDiv = styled.div`
-    display: grid;
+    display: flex;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     flex: 1;

@@ -43,15 +43,19 @@ const LeagueName = styled.h4`
 
 const LiveGamesDiv = styled.div``
 
-export default function LeagueLiveGames ({countryName, countryFlag, leagueName, liveGamesArray}) {
-   
+export default function LeagueLiveGames ({countryName, countryFlag, leagueName, liveGamesArray, leagueId}) {
+
+   /*  function returnTheLeagueId(){
+        return leagueId;
+    }
+ */
     return(
-        <MainContent>
+        <MainContent >
             <CountryInfomationsDiv>
                 <CountryFlag src={countryFlag} />
                 <CountryNameAndLeague>
                     <CountryName>{countryName}</CountryName>
-                    <LeagueName>{leagueName}</LeagueName>
+                    <LeagueName>{leagueName.split(" - ")[0]}</LeagueName>
                 </CountryNameAndLeague>
             </CountryInfomationsDiv>
             <LiveGamesDiv>

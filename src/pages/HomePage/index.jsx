@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {useSelector} from "react-redux";
 import LeagueInfo from "./components/leagueInfo/Index";
 import LeagueLiveGames from "./components/LeagueLiveGames";
 import NavBar from "../../Components/Side_Nav_bar/Index";
@@ -22,19 +23,20 @@ export default function HomePage () {
           'X-RapidAPI-Key': process.env.REACT_APP_API_KEY,
           'X-RapidAPI-Host': process.env.REACT_APP_API_HOST
         }
-      };
+    };
+
+    async function getLiveGames() {
+        try {
+            const response = await axios.request(options);
+            setLiveGames(response.data.response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
-        async function getLiveGames() {
-            try {
-                const response = await axios.request(options);
-                setLiveGames(response.data.response);
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getLiveGames();
         
+        console.log("aaaaaaaa")
     }, []); 
 
 
@@ -55,7 +57,9 @@ export default function HomePage () {
 
     const liveGamesByLeagueEntries = Array.from(liveGamesByLeague.entries());
 
-
+   
+    //const [leagueToShow, setLeagueToShow] = useState(liveGamesByLeagueEntries[0][1][0].league.id)
+    
     return(
         <MainContent>
             <NavBar  />
@@ -63,8 +67,10 @@ export default function HomePage () {
                 <LiveGamesDiv>
                     {
                         liveGamesByLeagueEntries.map((league) => {
-                            return <LeagueLiveGames 
-                                        key={league[0]}
+                            return <LeagueLiveGames
+                                        
+                                        key={league[1][0].league.id}
+                                        leagueId={league[1][0].league.id}
                                         leagueName={league[0]}
                                         countryName={league[1][0].league.country}
                                         countryFlag={league[1][0].league.flag}
@@ -73,7 +79,7 @@ export default function HomePage () {
                         })
                     }
                 </LiveGamesDiv>
-                <LeagueInfo/>
+                <LeagueInfo />
             </MainContentDiv>
         </MainContent>
     );

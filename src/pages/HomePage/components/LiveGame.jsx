@@ -94,10 +94,7 @@ export default function LiveGame({homeName, awayName, homeGoals, awayGoals, curr
                 </TeamDiv>
             </TeamsNamesDiv>
             <MatchePageButton>
-                <Link to='/match'>
                 <img src={matchLinkIcon} alt="Icon to go for the page of the match" />
-                </Link>
-                
             </MatchePageButton>
         </MainContent>
     );

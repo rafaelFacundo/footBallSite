@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {useSelector} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateLeagueId } from "../../services/league_IdSlice";
 import LeagueInfo from "./components/leagueInfo/Index";
 import LeagueLiveGames from "./components/LeagueLiveGames";
 import NavBar from "../../Components/Side_Nav_bar/Index";
@@ -14,6 +15,9 @@ import {
 export default function HomePage () {
     const [liveGames, setLiveGames] = useState([]);
     const liveGamesByLeague = new Map();
+    const currentLeagueId = useSelector(state => state.leagueId.value);
+
+  
 
     const options = {
         method: 'GET',
@@ -28,15 +32,16 @@ export default function HomePage () {
     async function getLiveGames() {
         try {
             const response = await axios.request(options);
+            console.log(response.data.response)
             setLiveGames(response.data.response);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
     useEffect(() => {
-        
-        console.log("aaaaaaaa")
+        getLiveGames();
+    
     }, []); 
 
 
@@ -55,7 +60,17 @@ export default function HomePage () {
 
 
 
-    const liveGamesByLeagueEntries = Array.from(liveGamesByLeague.entries());
+    const liveGamesByLeagueEntries = Array.from(liveGamesByLeague.entries());   
+
+    /* if ( liveGamesByLeagueEntries.length > 0 ) {
+        console.log("the list is");
+        console.log(liveGamesByLeagueEntries[0][1][0].league.id);
+        
+    } */
+
+    console.log(liveGamesByLeagueEntries[0] )
+
+    //useDispatch(updateLeagueId(liveGamesByLeagueEntries[0][1][0].league.id));
 
    
     //const [leagueToShow, setLeagueToShow] = useState(liveGamesByLeagueEntries[0][1][0].league.id)
@@ -68,7 +83,6 @@ export default function HomePage () {
                     {
                         liveGamesByLeagueEntries.map((league) => {
                             return <LeagueLiveGames
-                                        
                                         key={league[1][0].league.id}
                                         leagueId={league[1][0].league.id}
                                         leagueName={league[0]}

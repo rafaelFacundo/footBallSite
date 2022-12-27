@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { updateLeagueId } from "../../../../services/league_IdSlice";
 import PremierLeague from "../../../../Assets/premier_league_icon.png";
 import England from "../../../../Assets/England_flag.png";
 import Chelsea from "../../../../Assets/chelsea.png";
@@ -17,51 +19,42 @@ const MainContent = styled.div`
     -ms-overflow-style: none;
     scrollbar-width: none;
 `;
-
 const ImageAndName = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
 `;
-
 const LeagueNameAndFlag = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
 `;
-
 const Image = styled.img`
     width: 70px;
     height: 70px;
     margin-right: 10px;
 `;
-
 const LeagueContryAndLeagueName = styled.div`
     
 `;
-
 const StandingsDiv = styled.div`
     
 `;
-const StandingTitle = styled.h3``
-
+const StandingTitle = styled.h3``;
 const Stand = styled.table`
     border-collapse: collapse;
     width: 100%;
     text-align: center;
 `;
-
 const StandHead = styled.th`
     background-color: #2144F9;
     color: ${props => props.textColor || "white"};
 `;
-
 const StandRow = styled.tr`
     padding: 10px;
     box-sizing: border-box;
 `;
-
 const StandData = styled.td`
     display: ${props => props.dataDisplay || "auto"};
     align-items: center;
@@ -75,26 +68,26 @@ const ClubShield = styled.img`
     width: 20px;
     height: 20px;
     margin: 0;
-`
-
-
+`;
 const TopScoresDiv = styled.div``;
 
 export default function LeagueInfo(){
+    
+    let currentLeagueId = useSelector(state => state.leagueId.value);
+    
+    console.log(`the current id is ${currentLeagueId}`)
+    
+
     function returnColor(type) {
         switch (type) {
             case 0:
                 return "green";
-                break;
             case 1:
                 return "yellow";
-                break;
             case 2:
-                return "red";
-                break;        
+                return "red";        
             default:
                 return "black";
-                break;
         };
     };
     return(

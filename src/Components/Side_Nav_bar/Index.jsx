@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import siteLogo from "../../Assets/site_logo.png";
-import searchIcon from "../../Assets/search_icon.png";
 import menuBarIcon from "../../Assets/menu_bar_icon.png";
 import SideBar from "./SideBar";
 import axios from "axios";
@@ -32,35 +31,13 @@ const LogoDiv = styled.div`
     color: white;
     
 `
-const SearchInputDiv = styled.div`
-    width: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-`
-const InputText = styled.input`
-    width: 70%;
-    height: 3em;
-    text-align: center;
-`
-const ButtonSearch = styled.button`
-    margin: 0;
-    border: none;
-    border-radius: 0;
-    height: 3.3em;
-    width: 4em;
-    background-color: #60FF46;
-`
 const SiteLogo = styled.img`
     width: 4em;
     height: 4em;
     margin-right: 2em;
     margin-left: 2em;
 `
-const ImageOfTheButton = styled.img`
-    width: 2em;
-    height: 2em;
-`
+
 const MenurIcon = styled.img`
     margin: 1em;
     width: 2em;
@@ -113,17 +90,7 @@ export default function NavBar() {
                     <SiteLogo src={siteLogo} /> 
                     <h2>Hat Trick</h2>
                 </LogoDiv>
-                <SearchInputDiv>
-                    <InputText
-                        placeholder="Search here"
-                    />
-                    <ButtonSearch>
-                        <ImageOfTheButton 
-                            src={searchIcon} 
-                            alt="icon of a magnifying glass of the button of the search div" 
-                        />
-                    </ButtonSearch>
-                </SearchInputDiv>
+                
             </Main>
         </Container>
     );

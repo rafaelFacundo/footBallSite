@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLeagueId } from "../../../services/league_IdSlice";
 import styled from "styled-components";
 import matchLinkIcon from "../../../Assets/match_page_link_icon.png";
 
@@ -76,8 +78,17 @@ const MatchePageButton = styled.button`
 
 `
 
-export default function LiveGame({homeName, awayName, homeGoals, awayGoals, currentTime, date}) {
-    return(
+export default function LiveGame({ homeName, awayName, homeGoals, awayGoals, currentTime, date, idOfTeamsLeague }) {
+    const dispatch = useDispatch();
+    
+
+    
+    const handleClick = () => {
+        dispatch(updateLeagueId({id:idOfTeamsLeague}));
+        
+    }
+
+    return (
         <MainContent>
             <ScheduleAndTimeDiv>
                 <ScheduleOfbeginning>{date}</ScheduleOfbeginning>
@@ -93,7 +104,7 @@ export default function LiveGame({homeName, awayName, homeGoals, awayGoals, curr
                     <TeamGoals>{awayGoals}</TeamGoals>
                 </TeamDiv>
             </TeamsNamesDiv>
-            <MatchePageButton>
+            <MatchePageButton onClick={() => {handleClick()}}>
                 <img src={matchLinkIcon} alt="Icon to go for the page of the match" />
             </MatchePageButton>
         </MainContent>

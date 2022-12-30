@@ -14,6 +14,7 @@ import {
 
 export default function HomePage () {
     const [liveGames, setLiveGames] = useState([]);
+    const [canRender, setCanRender] = useState(false);
     const liveGamesByLeague = new Map();
     const currentLeagueId = useSelector(state => state.leagueId.value);
 
@@ -32,8 +33,8 @@ export default function HomePage () {
     async function getLiveGames() {
         try {
             const response = await axios.request(options);
-            console.log(response.data.response)
             setLiveGames(response.data.response);
+            console.log(liveGames  )
         } catch (error) {
             console.log(error);
         }
@@ -41,24 +42,20 @@ export default function HomePage () {
 
     useEffect(() => {
         getLiveGames();
-    
     }, []); 
 
-
-    liveGames.forEach((liveGame, index) => {
+    liveGames.forEach((liveGame) => {
         const leagueKey = `${liveGame.league.name} - ${liveGame.league.country}`;
         if(liveGamesByLeague.has(leagueKey)) { 
             let arrayOfGames = liveGamesByLeague.get(leagueKey);
             arrayOfGames.push(liveGame);
-            liveGamesByLeague.set(leagueKey, arrayOfGames)
+            liveGamesByLeague.set(leagueKey, arrayOfGames);
         }else {
-            let newEspecificCountryArray = []
+            let newEspecificCountryArray = [];
             newEspecificCountryArray.push(liveGame);
             liveGamesByLeague.set(leagueKey, newEspecificCountryArray);
         }
     });
-
-
 
     const liveGamesByLeagueEntries = Array.from(liveGamesByLeague.entries());   
 
@@ -68,33 +65,67 @@ export default function HomePage () {
         
     } */
 
-    console.log(liveGamesByLeagueEntries[0] )
+    function renderTheLiveGames(listOfLeagues) {
+        listOfLeagues.map((league) => {
+            return <LeagueLiveGames
+                        key={league[1][0].league.id}
+                        leagueId={league[1][0].league.id}
+                        leagueName={league[0]}
+                        countryName={league[1][0].league.country}
+                        countryFlag={league[1][0].league.flag}
+                        liveGamesArray={league[1]}
+                    />
+        });
+    };
 
-    //useDispatch(updateLeagueId(liveGamesByLeagueEntries[0][1][0].league.id));
-
-   
-    //const [leagueToShow, setLeagueToShow] = useState(liveGamesByLeagueEntries[0][1][0].league.id)
+    function returnMessage() {
+        if (liveGames.length > 0) {
+            return <p>Carregando os jogos ao vivo</p>
+        }else {
+            return <p>Não há jogos disponíveis no momento</p>
+        }
+    }
     
     return(
         <MainContent>
             <NavBar  />
             <MainContentDiv>
+               {/*  <LiveGamesDiv>
+                    {canRender ? renderTheLiveGames(liveGamesByLeagueEntries) : returnMessage()}
+                </LiveGamesDiv> */}
+
                 <LiveGamesDiv>
-                    {
-                        liveGamesByLeagueEntries.map((league) => {
-                            return <LeagueLiveGames
-                                        key={league[1][0].league.id}
-                                        leagueId={league[1][0].league.id}
-                                        leagueName={league[0]}
-                                        countryName={league[1][0].league.country}
-                                        countryFlag={league[1][0].league.flag}
-                                        liveGamesArray={league[1]}
-                                    />
-                        })
-                    }
+                {
+                    liveGamesByLeagueEntries.map((league) => {
+                        return <LeagueLiveGames
+                                    key={league[1][0].league.id}
+                                    leagueId={league[1][0].league.id}
+                                    leagueName={league[0]}
+                                    countryName={league[1][0].league.country}
+                                    countryFlag={league[1][0].league.flag}
+                                    liveGamesArray={league[1]}
+                                />
+                    })
+                } 
+
                 </LiveGamesDiv>
+
+
                 <LeagueInfo />
             </MainContentDiv>
         </MainContent>
     );
 }
+
+/* {
+    liveGamesByLeagueEntries.map((league) => {
+        return <LeagueLiveGames
+                    key={league[1][0].league.id}
+                    leagueId={league[1][0].league.id}
+                    leagueName={league[0]}
+                    countryName={league[1][0].league.country}
+                    countryFlag={league[1][0].league.flag}
+                    liveGamesArray={league[1]}
+                />
+    })
+}  */

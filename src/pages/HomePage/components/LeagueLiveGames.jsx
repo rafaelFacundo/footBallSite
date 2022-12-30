@@ -69,6 +69,7 @@ export default function LeagueLiveGames ({countryName, countryFlag, leagueName, 
                                     awayGoals={liveGame.goals.away}
                                     currentTime={liveGame.fixture.status.elapsed}
                                     date={liveGame.fixture.date.slice(11,16)}
+                                    idOfTeamsLeague={leagueId}
                                 />
                     })
                 }

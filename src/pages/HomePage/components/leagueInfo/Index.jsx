@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLeagueId } from "../../../../services/league_IdSlice";
-import PremierLeague from "../../../../Assets/premier_league_icon.png";
-import England from "../../../../Assets/England_flag.png";
-import Chelsea from "../../../../Assets/chelsea.png";
-import jorginho from "../../../../Assets/jorginho_face.jpg";
 
 const MainContent = styled.div`
     width: auto;
@@ -47,6 +44,7 @@ const Stand = styled.table`
     width: 100%;
     text-align: center;
 `;
+const StandBody = styled.tbody``;
 const StandHead = styled.th`
     background-color: #2144F9;
     color: ${props => props.textColor || "white"};
@@ -72,141 +70,207 @@ const ClubShield = styled.img`
 const TopScoresDiv = styled.div``;
 
 export default function LeagueInfo(){
+    const [standing, setStanding] = useState([]);
+    //const [topScore, setTopScores] = useState([]);
+    const [canRender, setCanRender] = useState({
+        render: false,
+        hasAproblem: false
+    });
     
-    let currentLeagueId = useSelector(state => state.leagueId.value);
+    const currentLeagueId = useSelector(state => state.leagueId.value);
     
-    console.log(`the current id is ${currentLeagueId}`)
+   
     
-
-    function returnColor(type) {
-        switch (type) {
-            case 0:
+    function returnColor(text) {
+        switch (text) {
+            case "W":
                 return "green";
-            case 1:
+            case "D":
                 return "yellow";
-            case 2:
+            case "L":
                 return "red";        
             default:
                 return "black";
-        };
+        };  
     };
+
+    function treatTeamName(teamName) {
+        const teamNameSplited = teamName.split(' ');
+        if (teamNameSplited.length < 2) {
+            return teamNameSplited[0].slice(0,8);
+        }else {
+            return `${teamNameSplited[0].slice(0,5)}`;
+        }
+    }
+
+
+
+    async function getStandings(id) {
+        const options = {
+            method: 'GET',
+            url: 'https://api-football-v1.p.rapidapi.com/v3/standings',
+            params: {
+                season: new Date().getFullYear(),
+                league: id
+            },
+            headers: {
+                'X-RapidAPI-Key': process.env.REACT_APP_API_KEY,
+                'X-RapidAPI-Host': process.env.REACT_APP_API_HOST
+            }
+        };
+        /* Making the request of the standings of the league */
+        try {
+            const requesteResponse = await axios.request(options);
+            
+            if (requesteResponse.data.response.length == 0) {
+                setCanRender({
+                    render: false,
+                    hasAproblem: true
+                });
+                return;
+            };
+            setStanding(requesteResponse.data.response);
+            setCanRender({
+                render: true,
+                hasAproblem: false
+            });
+            
+        } catch (error) {
+            setCanRender({
+                render: false,
+                hasAproblem: true
+            });
+            console.error(error)
+        }
+    };
+
+    useEffect(() => {
+        setCanRender({
+            render: false,
+            hasAproblem: false
+        });
+        async function call(id) {
+            await getStandings(id);
+    
+        }
+        call(currentLeagueId);
+    }, [currentLeagueId])
+
+
+    function returnContent(League) {
+        if (canRender.hasAproblem) {
+            return <p>Something went wrong, choose another league...</p>;
+        }else if (!(canRender.render)) {
+            return <p>Loading data...</p>;
+        }else {
+            return(
+                <>
+                    <LeagueNameAndFlag>
+                        <ImageAndName>
+                            <Image src={League[0].league.logo}/>
+                            <LeagueContryAndLeagueName>
+                                <p>{League[0].league.country}</p>
+                                <p>{League[0].league.name}</p>
+                            </LeagueContryAndLeagueName>
+                        </ImageAndName>
+                        <Image src={League[0].league.flag}/>
+                    </LeagueNameAndFlag>
+                    <StandingsDiv>
+                        <StandingTitle>Standings</StandingTitle>
+                        <Stand>
+                            <StandBody>
+                                <StandRow>
+                                    <StandHead>P</StandHead>
+                                    <StandHead>Club</StandHead>
+                                    <StandHead>MP</StandHead>
+                                    <StandHead textColor="green">W</StandHead>
+                                    <StandHead textColor="yellow">D</StandHead>
+                                    <StandHead textColor="red">L</StandHead>
+                                    <StandHead>GF</StandHead>
+                                    <StandHead>GA</StandHead>
+                                    <StandHead>GD</StandHead>
+                                    <StandHead>Pts</StandHead>
+                                    <StandHead>Last five</StandHead>
+                                </StandRow>
+                                {
+                                    League[0].league.standings[0].map((teamRow) => {
+                                        return (
+                                            <StandRow key={teamRow.team.id}>
+                                                <StandData>{teamRow.rank}°</StandData>
+                                                <StandData dataDisplay="flex">
+                                                    <ClubShield src={teamRow.team.logo} />
+                                                    <StandText>{treatTeamName(teamRow.team.name)}</StandText>
+                                                </StandData>
+                                                <StandData>{teamRow.all.played}</StandData>
+                                                <StandData>{teamRow.all.win}</StandData>
+                                                <StandData>{teamRow.all.draw}</StandData>
+                                                <StandData>{teamRow.all.lose}</StandData>
+                                                <StandData>{teamRow.all.goals.for}</StandData>
+                                                <StandData>{teamRow.all.goals.against}</StandData>
+                                                <StandData>{teamRow.goalsDiff}</StandData>
+                                                <StandData>25</StandData>
+                                                <StandData dataDisplay="flex">
+                                                    <StandText textColor={returnColor(teamRow.form[0])}>{teamRow.form[0]}</StandText>
+                                                    <StandText textColor={returnColor(teamRow.form[1])}>{teamRow.form[1]}</StandText>
+                                                    <StandText textColor={returnColor(teamRow.form[2])}>{teamRow.form[2]}</StandText>
+                                                    <StandText textColor={returnColor(teamRow.form[3])}>{teamRow.form[3]}</StandText>
+                                                    <StandText textColor={returnColor(teamRow.form[4])}>{teamRow.form[4]}</StandText>
+                                                </StandData>
+                                            </StandRow>
+                                        );
+                                    })
+                                }
+                            </StandBody>
+                        </Stand>
+                    </StandingsDiv>
+                    {/* Table of top scores of the league */}
+                    {/* <TopScoresDiv>
+                        <StandingTitle>Top Scores</StandingTitle>
+                        <Stand>
+                            <StandBody>
+                                <StandRow>
+                                    <StandHead>P</StandHead>
+                                    <StandHead>Player</StandHead>
+                                    <StandHead>Goals</StandHead>
+                                    <StandHead>Club</StandHead>
+                                    <StandHead>Y.C</StandHead>
+                                    <StandHead>R.C</StandHead>
+                                    <StandHead>Dribbles</StandHead>
+                                    <StandHead>games</StandHead>
+                                    <StandHead>Passes</StandHead>
+                                    <StandHead>shots</StandHead>
+                                    <StandHead>Penaltys</StandHead>
+                                </StandRow>
+                                <StandRow>
+                                    <StandData>1°</StandData>
+                                    <StandData dataDisplay="flex">
+                                        <ClubShield src={jorginho} />
+                                        <StandText>jorginho</StandText>
+                                    </StandData>
+                                    <StandData>8</StandData>
+                                    <StandData>
+                                        <ClubShield src={Chelsea} />
+                                    </StandData>
+                                    <StandData>0</StandData>
+                                    <StandData>0</StandData>
+                                    <StandData>10</StandData>
+                                    <StandData>10</StandData>
+                                    <StandData>300</StandData>
+                                    <StandData>8</StandData>
+                                    <StandData>0</StandData>
+                                </StandRow>
+                            </StandBody>
+                        </Stand>
+                    </TopScoresDiv> */}
+                </>
+            );
+        }
+    }
+
+
     return(
         <MainContent>
-            <LeagueNameAndFlag>
-                <ImageAndName>
-                    <Image src={PremierLeague}/>
-                    <LeagueContryAndLeagueName>
-                        <p>England</p>
-                        <p>Premier League</p>
-                    </LeagueContryAndLeagueName>
-                </ImageAndName>
-                <Image src={England}/>
-            </LeagueNameAndFlag>
-
-            <StandingsDiv>
-                <StandingTitle>Standings</StandingTitle>
-                <Stand>
-                    <StandRow>
-                        <StandHead>P</StandHead>
-                        <StandHead>Club</StandHead>
-                        <StandHead>MP</StandHead>
-                        <StandHead textColor="green">W</StandHead>
-                        <StandHead textColor="yellow">D</StandHead>
-                        <StandHead textColor="red">L</StandHead>
-                        <StandHead>GF</StandHead>
-                        <StandHead>GA</StandHead>
-                        <StandHead>GD</StandHead>
-                        <StandHead>Pts</StandHead>
-                        <StandHead>Last five</StandHead>
-                    </StandRow>
-                    <StandRow>
-                        <StandData>1°</StandData>
-                        <StandData dataDisplay="flex">
-                            <ClubShield src={Chelsea} />
-                            <StandText>Chelsea</StandText>
-                        </StandData>
-                        <StandData>10</StandData>
-                        <StandData>8</StandData>
-                        <StandData>1</StandData>
-                        <StandData>1</StandData>
-                        <StandData>10</StandData>
-                        <StandData>4</StandData>
-                        <StandData>6</StandData>
-                        <StandData>25</StandData>
-                        <StandData dataDisplay="flex">
-                            <StandText textColor={returnColor(2)}>L</StandText>
-                            <StandText textColor={returnColor(1)}>D</StandText>
-                            <StandText textColor={returnColor(0)}>W</StandText>
-                            <StandText textColor={returnColor(0)}>W</StandText>
-                            <StandText textColor={returnColor(0)}>W</StandText>
-                        </StandData>
-
-                    </StandRow>
-
-                    <StandRow>
-                        <StandData>1°</StandData>
-                        <StandData dataDisplay="flex">
-                            <ClubShield src={Chelsea} />
-                            <StandText>Chelsea</StandText>
-                        </StandData>
-                        <StandData>10</StandData>
-                        <StandData>8</StandData>
-                        <StandData>1</StandData>
-                        <StandData>1</StandData>
-                        <StandData>10</StandData>
-                        <StandData>4</StandData>
-                        <StandData>6</StandData>
-                        <StandData>25</StandData>
-                        <StandData dataDisplay="flex">
-                            <StandText textColor={returnColor(2)}>L</StandText>
-                            <StandText textColor={returnColor(1)}>D</StandText>
-                            <StandText textColor={returnColor(0)}>W</StandText>
-                            <StandText textColor={returnColor(0)}>W</StandText>
-                            <StandText textColor={returnColor(0)}>W</StandText>
-                        </StandData>
-
-                    </StandRow>
-                </Stand>
-            </StandingsDiv>
-
-            <TopScoresDiv>
-                <StandingTitle>Top Scores</StandingTitle>
-                <Stand>
-                    <StandRow>
-                        <StandHead>P</StandHead>
-                        <StandHead>Player</StandHead>
-                        <StandHead>Goals</StandHead>
-                        <StandHead>Club</StandHead>
-                        <StandHead>Y.C</StandHead>
-                        <StandHead>R.C</StandHead>
-                        <StandHead>Dribbles</StandHead>
-                        <StandHead>games</StandHead>
-                        <StandHead>Passes</StandHead>
-                        <StandHead>shots</StandHead>
-                        <StandHead>Penaltys</StandHead>
-
-                    </StandRow>
-                    <StandRow>
-                        <StandData>1°</StandData>
-                        <StandData dataDisplay="flex">
-                            <ClubShield src={jorginho} />
-                            <StandText>jorginho</StandText>
-                        </StandData>
-                        <StandData>8</StandData>
-                        <StandData>
-                            <ClubShield src={Chelsea} />
-                        </StandData>
-                        <StandData>0</StandData>
-                        <StandData>0</StandData>
-                        <StandData>10</StandData>
-                        <StandData>10</StandData>
-                        <StandData>300</StandData>
-                        <StandData>8</StandData>
-                        <StandData>0</StandData>
-
-                    </StandRow>
-                </Stand>
-            </TopScoresDiv>
+            {returnContent(standing)}
         </MainContent>
     );
 }

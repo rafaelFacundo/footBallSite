@@ -3,11 +3,11 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 const leagueSlice = createSlice({
     name: 'League',
     initialState: {
-        value: -1
+        value: 39
     },
     reducers: {
         updateLeagueId: (state, action) => {
-            state.leagueId = action.payload
+            state.value = action.payload.id
         }
     }
 })

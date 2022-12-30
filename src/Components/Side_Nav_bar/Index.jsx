@@ -78,7 +78,7 @@ export default function NavBar() {
     }, [])
 
     return(
-        <Container>
+        <Container>     
             {displaySideBar && <SideBar leagues={data}/>}
             <Main>
                 

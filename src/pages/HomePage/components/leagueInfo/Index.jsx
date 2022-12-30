@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { updateLeagueId } from "../../../../services/league_IdSlice";
+import { useSelector } from "react-redux";
+
 
 const MainContent = styled.div`
     width: auto;

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-
+import { useDispatch } from "react-redux";
+import {updateLeagueId} from "../../services/league_IdSlice";
 
 
 const MainContent = styled.div`
@@ -49,17 +50,21 @@ const LeagueDescription = styled.p`
     
 `
 
-export default function CountryOption(data) {
-    //console.log(data.data.league.name)
+export default function CountryOption({data}) {
+    const dispatch = useDispatch();
+    const idToreturn = data.league.id;
+    const handleClick = () => {
+        dispatch(updateLeagueId({id:idToreturn}));
+    }
     return(
         <MainContent>
             <LeagueIconDiv>
-                <LeagueIcon src={data.data.league.logo} />
+                <LeagueIcon src={data.league.logo}/>
             </LeagueIconDiv>
 
-            <LeagueNameDiv>
-                <LeagueName>
-                    {data.data.league.name}
+            <LeagueNameDiv >
+                <LeagueName onClick={() => {handleClick()}}>
+                    {data.league.name}
                 </LeagueName>
                 <LeagueDescription>
 

@@ -31,17 +31,18 @@ const MainContent = styled.div`
 `
 
 export default function SideBar ( {leagues} ) {
+    
     return(
         <MainContent>
             {
-                leagues.map((League, index) => {
-                    
-                    return <CountryOption data = {League} key={League.league.id} />
+                leagues.map((League) => {
+                    return <CountryOption 
+                                data={League}
+                                key={League.league.id}
+                                
+                            />
                 })
             }
-            
-          
-
         </MainContent>
     );
 }

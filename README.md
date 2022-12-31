@@ -14,4 +14,4 @@ You may also see any lint errors in the console.
 
 the site currently looks like this:
 
-![CURRENT_SITE](https://user-images.githubusercontent.com/79310598/209446870-2ca4811a-583b-45a9-a17e-4d100ef3510c.png)
+![currentState](https://user-images.githubusercontent.com/79310598/210084608-3fb43cd2-303c-4dd3-b257-9e981e1eb5d5.png)

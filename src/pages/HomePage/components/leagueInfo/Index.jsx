@@ -31,6 +31,7 @@ const Image = styled.img`
     width: 70px;
     height: 70px;
     margin-right: 10px;
+    border: ${props => props.imgBorder || "none"};
 `;
 const LeagueContryAndLeagueName = styled.div`
     
@@ -121,7 +122,7 @@ export default function LeagueInfo(){
         /* Making the request of the standings of the league */
         try {
             const requesteResponse = await axios.request(options);
-            
+            console.log(requesteResponse.data.response);
             if (requesteResponse.data.response.length == 0) {
                 setCanRender({
                     render: false,
@@ -173,55 +174,65 @@ export default function LeagueInfo(){
                                 <p>{League[0].league.name}</p>
                             </LeagueContryAndLeagueName>
                         </ImageAndName>
-                        <Image src={League[0].league.flag}/>
+                        <Image imgBorder={"1px solid lightgray"} src={League[0].league.flag}/>
                     </LeagueNameAndFlag>
                     <StandingsDiv>
-                        <StandingTitle>Standings</StandingTitle>
-                        <Stand>
-                            <StandBody>
-                                <StandRow>
-                                    <StandHead>P</StandHead>
-                                    <StandHead>Club</StandHead>
-                                    <StandHead>MP</StandHead>
-                                    <StandHead textColor="green">W</StandHead>
-                                    <StandHead textColor="yellow">D</StandHead>
-                                    <StandHead textColor="red">L</StandHead>
-                                    <StandHead>GF</StandHead>
-                                    <StandHead>GA</StandHead>
-                                    <StandHead>GD</StandHead>
-                                    <StandHead>Pts</StandHead>
-                                    <StandHead>Last five</StandHead>
-                                </StandRow>
-                                {
-                                    League[0].league.standings[0].map((teamRow) => {
-                                        return (
-                                            <StandRow key={teamRow.team.id}>
-                                                <StandData>{teamRow.rank}°</StandData>
-                                                <StandData dataDisplay="flex">
-                                                    <ClubShield src={teamRow.team.logo} />
-                                                    <StandText>{treatTeamName(teamRow.team.name)}</StandText>
-                                                </StandData>
-                                                <StandData>{teamRow.all.played}</StandData>
-                                                <StandData>{teamRow.all.win}</StandData>
-                                                <StandData>{teamRow.all.draw}</StandData>
-                                                <StandData>{teamRow.all.lose}</StandData>
-                                                <StandData>{teamRow.all.goals.for}</StandData>
-                                                <StandData>{teamRow.all.goals.against}</StandData>
-                                                <StandData>{teamRow.goalsDiff}</StandData>
-                                                <StandData>25</StandData>
-                                                <StandData dataDisplay="flex">
-                                                    <StandText textColor={returnColor(teamRow.form[0])}>{teamRow.form[0]}</StandText>
-                                                    <StandText textColor={returnColor(teamRow.form[1])}>{teamRow.form[1]}</StandText>
-                                                    <StandText textColor={returnColor(teamRow.form[2])}>{teamRow.form[2]}</StandText>
-                                                    <StandText textColor={returnColor(teamRow.form[3])}>{teamRow.form[3]}</StandText>
-                                                    <StandText textColor={returnColor(teamRow.form[4])}>{teamRow.form[4]}</StandText>
-                                                </StandData>
-                                            </StandRow>
-                                        );
-                                    })
-                                }
-                            </StandBody>
-                        </Stand>
+                    <StandingTitle>Standings</StandingTitle>
+                        {
+                            League[0].league.standings.map((standing, index) => {
+                                return(
+                                    <>
+                                        {(League[0].league.standings.length > 1) ? <StandingTitle>{League[0].league.standings[index][0].group}</StandingTitle> : <></>}
+                                        <Stand>
+                                            <StandBody>
+                                                <StandRow>
+                                                    <StandHead>P</StandHead>
+                                                    <StandHead>Club</StandHead>
+                                                    <StandHead>MP</StandHead>
+                                                    <StandHead textColor="green">W</StandHead>
+                                                    <StandHead textColor="yellow">D</StandHead>
+                                                    <StandHead textColor="red">L</StandHead>
+                                                    <StandHead>GF</StandHead>
+                                                    <StandHead>GA</StandHead>
+                                                    <StandHead>GD</StandHead>
+                                                    <StandHead>Pts</StandHead>
+                                                    <StandHead>Last five</StandHead>
+                                                </StandRow>
+                                                {
+                                                    standing.map((teamRow) => {
+                                                        return (
+                                                            <StandRow key={teamRow.team.id}>
+                                                                <StandData>{teamRow.rank}°</StandData>
+                                                                <StandData dataDisplay="flex">
+                                                                    <ClubShield src={teamRow.team.logo} />
+                                                                    <StandText>{treatTeamName(teamRow.team.name)}</StandText>
+                                                                </StandData>
+                                                                <StandData>{teamRow.all.played}</StandData>
+                                                                <StandData>{teamRow.all.win}</StandData>
+                                                                <StandData>{teamRow.all.draw}</StandData>
+                                                                <StandData>{teamRow.all.lose}</StandData>
+                                                                <StandData>{teamRow.all.goals.for}</StandData>
+                                                                <StandData>{teamRow.all.goals.against}</StandData>
+                                                                <StandData>{teamRow.goalsDiff}</StandData>
+                                                                <StandData>{teamRow.points}</StandData>
+                                                                <StandData dataDisplay="flex">
+                                                                    <StandText textColor={returnColor(teamRow.form[0])}>{teamRow.form[0]}</StandText>
+                                                                    <StandText textColor={returnColor(teamRow.form[1])}>{teamRow.form[1]}</StandText>
+                                                                    <StandText textColor={returnColor(teamRow.form[2])}>{teamRow.form[2]}</StandText>
+                                                                    <StandText textColor={returnColor(teamRow.form[3])}>{teamRow.form[3]}</StandText>
+                                                                    <StandText textColor={returnColor(teamRow.form[4])}>{teamRow.form[4]}</StandText>
+                                                                </StandData>
+                                                            </StandRow>
+                                                        );
+                                                    })
+                                                }
+                                            </StandBody>
+                                        </Stand>
+                                    </>
+                                );
+                            })
+                        }
+                        
                     </StandingsDiv>
                     {/* Table of top scores of the league */}
                     {/* <TopScoresDiv>

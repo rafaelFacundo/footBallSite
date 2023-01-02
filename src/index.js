@@ -4,6 +4,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import store from './services/store';
 import { Provider } from 'react-redux';
+import { QueryClientProvider } from 'react-query';
+import { queryClient } from './services/queryClient';
 import {
   BrowserRouter as Router,
   Route,
@@ -13,9 +15,10 @@ import HomePage from './pages/HomePage/index';
 import LeaguePage from './pages/LeaguePage/index';
 import MatchPage from './pages/MatchPage/index';
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
+  <QueryClientProvider client={queryClient}>
     <Provider store={store}>
       <Router>
         <Routes>
@@ -25,6 +28,8 @@ root.render(
         </Routes>
       </Router>
     </Provider>
+  </QueryClientProvider> 
+    
     
 );
 

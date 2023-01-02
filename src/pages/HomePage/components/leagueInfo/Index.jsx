@@ -122,7 +122,8 @@ export default function LeagueInfo(){
         /* Making the request of the standings of the league */
         try {
             const requesteResponse = await axios.request(options);
-            console.log(requesteResponse.data.response);
+            console.log("asasasasasas")
+            console.log(requesteResponse);
             if (requesteResponse.data.response.length == 0) {
                 setCanRender({
                     render: false,

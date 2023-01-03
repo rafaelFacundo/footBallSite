@@ -2,6 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { useDispatch } from "react-redux";
+import { updateLeagueId } from "../../services/league_IdSlice";
 import LeagueInfo from "./components/leagueInfo/Index";
 import LeagueLiveGames from "./components/LeagueLiveGames";
 import NavBar from "../../Components/Side_Nav_bar/Index";
@@ -12,6 +14,7 @@ import {
 } from "./styles";
 
 export default function HomePage () {
+    const dispatch = useDispatch();
     let liveGamesByLeagueEntries = new Array();
     const [liveGames, setLiveGames] = useState([]);
     const liveGamesByLeague = new Map();
@@ -34,7 +37,6 @@ export default function HomePage () {
         return response.data.response;
     });
 
-
     function createMap(){
         liveGames.forEach((liveGame) => {
             const leagueKey = `${liveGame.league.name} - ${liveGame.league.country}`;
@@ -48,11 +50,15 @@ export default function HomePage () {
                 liveGamesByLeague.set(leagueKey, newEspecificCountryArray);
             }
         });
-        console.log(Array.from(liveGamesByLeague.entries()))
         liveGamesByLeagueEntries = Array.from(liveGamesByLeague.entries());
     };
     
     if( !isFetching ){
+        
+        dispatch(updateLeagueId({
+            id:data[0].league.id,
+            season: data[0].league.season
+        }));
         createMap();
     };
 
@@ -68,12 +74,13 @@ export default function HomePage () {
         <MainContent>
             <NavBar  />
             <MainContentDiv>
-                <LiveGamesDiv>
+                <LiveGamesDiv> 
                 {
                     isFetching ? returnMessage() : (liveGamesByLeagueEntries.map((league) => {
                         return <LeagueLiveGames
                                     key={league[1][0].league.id}
                                     leagueId={league[1][0].league.id}
+                                    leagueSeason={league[1][0].league.season}
                                     leagueName={league[0]}
                                     countryName={league[1][0].league.country}
                                     countryFlag={league[1][0].league.flag}
@@ -82,7 +89,7 @@ export default function HomePage () {
                     }))
                 } 
                 </LiveGamesDiv>
-                <LeagueInfo />
+                { (!isFetching) && <LeagueInfo />}
             </MainContentDiv>
         </MainContent>
     );

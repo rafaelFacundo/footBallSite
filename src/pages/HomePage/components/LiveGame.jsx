@@ -78,13 +78,11 @@ const MatchePageButton = styled.button`
 
 `
 
-export default function LiveGame({ homeName, awayName, homeGoals, awayGoals, currentTime, date, idOfTeamsLeague }) {
+export default function LiveGame({ homeName, awayName, homeGoals, awayGoals, currentTime, date, idOfTeamsLeague, seasonOfLeague }) {
     const dispatch = useDispatch();
     
-
-    
     const handleClick = () => {
-        dispatch(updateLeagueId({id:idOfTeamsLeague}));
+        dispatch(updateLeagueId({id:idOfTeamsLeague, season: seasonOfLeague}));
         
     }
 

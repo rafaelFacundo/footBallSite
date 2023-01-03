@@ -70,6 +70,8 @@ const ClubShield = styled.img`
 `;
 const TopScoresDiv = styled.div``;
 
+const GhostDiv = styled.div``
+
 export default function LeagueInfo(){
     const [standing, setStanding] = useState([]);
     //const [topScore, setTopScores] = useState([]);
@@ -78,7 +80,8 @@ export default function LeagueInfo(){
         hasAproblem: false
     });
     
-    const currentLeagueId = useSelector(state => state.leagueId.value);
+    const currentLeagueId = useSelector(state => state.leagueId.value_id);
+    const currentLeagueSeason = useSelector(state => state.leagueId.season);
     
    
     
@@ -106,12 +109,13 @@ export default function LeagueInfo(){
 
 
 
-    async function getStandings(id) {
+    async function getStandings(id, season) {
         const options = {
             method: 'GET',
             url: 'https://api-football-v1.p.rapidapi.com/v3/standings',
             params: {
-                season: new Date().getFullYear(),
+                
+                season: season,
                 league: id
             },
             headers: {
@@ -122,8 +126,6 @@ export default function LeagueInfo(){
         /* Making the request of the standings of the league */
         try {
             const requesteResponse = await axios.request(options);
-            console.log("asasasasasas")
-            console.log(requesteResponse);
             if (requesteResponse.data.response.length == 0) {
                 setCanRender({
                     render: false,
@@ -147,16 +149,19 @@ export default function LeagueInfo(){
     };
 
     useEffect(() => {
-        setCanRender({
-            render: false,
-            hasAproblem: false
-        });
-        async function call(id) {
-            await getStandings(id);
-    
+        if (currentLeagueId != null && currentLeagueSeason != null) {
+            setCanRender({
+                render: false,
+                hasAproblem: false
+            });
+            async function call(id, season) {
+                await getStandings(id, season);
+        
+            }
+            call(currentLeagueId, currentLeagueSeason);
         }
-        call(currentLeagueId);
-    }, [currentLeagueId])
+        
+    }, [currentLeagueId, currentLeagueSeason])
 
 
     function returnContent(League) {
@@ -182,9 +187,9 @@ export default function LeagueInfo(){
                         {
                             League[0].league.standings.map((standing, index) => {
                                 return(
-                                    <>
+                                    <GhostDiv key={index}>
                                         {(League[0].league.standings.length > 1) ? <StandingTitle>{League[0].league.standings[index][0].group}</StandingTitle> : <></>}
-                                        <Stand>
+                                        <Stand >
                                             <StandBody>
                                                 <StandRow>
                                                     <StandHead>P</StandHead>
@@ -229,7 +234,7 @@ export default function LeagueInfo(){
                                                 }
                                             </StandBody>
                                         </Stand>
-                                    </>
+                                    </GhostDiv>
                                 );
                             })
                         }

@@ -43,7 +43,7 @@ const LeagueName = styled.h4`
 
 const LiveGamesDiv = styled.div``
 
-export default function LeagueLiveGames ({countryName, countryFlag, leagueName, liveGamesArray, leagueId}) {
+export default function LeagueLiveGames ({countryName, countryFlag, leagueName, liveGamesArray, leagueId, leagueSeason}) {
 
    /*  function returnTheLeagueId(){
         return leagueId;
@@ -70,6 +70,7 @@ export default function LeagueLiveGames ({countryName, countryFlag, leagueName, 
                                     currentTime={liveGame.fixture.status.elapsed}
                                     date={liveGame.fixture.date.slice(11,16)}
                                     idOfTeamsLeague={leagueId}
+                                    seasonOfLeague={leagueSeason}
                                 />
                     })
                 }
